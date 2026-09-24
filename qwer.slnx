@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="qwer/qwer.vcxproj" />
+  <Project Path="qwer/qwer.vcxproj" Id="062e7b8f-a022-47f0-b4ad-7660ec2414be" />
 </Solution>
