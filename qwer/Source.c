@@ -97,7 +97,7 @@ int main()
 					break;
 				}
 			}
-			inventory[num] = item;
+			inventory[num - 1] = item;
 			printf("Круто! Теперь у тебя в %d слоте есть что-то!(или нет)", num);
 		}
 		case 5: {
@@ -112,11 +112,26 @@ int main()
 					break;
 				}
 			}
-			inventory[num] = 0;
+			inventory[num - 1] = 0;
 			printf("Вау! Теперь у тебя в %d слоте ничего нет!", num);
 		}
 		case 6:
-			printf("6");
+			printf("Поиск уникальных элементов...");
+			for (int i = 0; i < 10; i++)
+			{
+				int count = 0;
+				for (int j; j<10; j++)
+				{
+					if (inventory[i] == inventory[j]) 
+					{
+						count++;
+					}
+				
+				}
+				if (count == 1) {
+					printf("Предмет в %d слоте -- уникален!", i + 1);
+				}
+			}
 		default:
 			printf("Ты по-моему чё-то перепутал...");
 		}
