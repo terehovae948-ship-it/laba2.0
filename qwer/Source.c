@@ -3,6 +3,10 @@ int current_day = 1;
 int current_hour = 8;
 static inventory [10]; //0 ничего 1 дерево 2 камень 3 семена 4 мотыга 5 лейка 6 топор 7 корзина 8 сено 9 лопата
 int work;
+char item_names[10][15] = 
+{
+	"Ничего", "Дерево", "Камень", "Семена", "Мотыга", "Лейка", "Топор", "Корзина", "Сено", "Лопата"
+};
 int main()
 {
 	int user_action;
@@ -49,29 +53,7 @@ int main()
 			printf("Вот ваш инвентарь:");
 			for (int num = 0; num < 10; num++)
 			{
-				switch (inventory[num])
-				{
-				case 0:
-					printf("%d Слот - Ничего \n", num + 1);
-				case 1:
-					printf("%d Слот - Дерево \n", num + 1);
-				case 2:
-					printf("%d Слот - Камень \n", num + 1);
-				case 3:
-					printf("%d Слот - Семена", num + 1);
-				case 4:
-					printf("%d Слот - Мотыга", num + 1);
-				case 5:
-					printf("%d Слот - Лейка", num + 1);
-				case 6:
-					printf("%d Слот - Топор", num + 1);
-				case 7:
-					printf("%d Слот - Корзина", num + 1);
-				case 8:
-					printf("%d Слот - Сено", num + 1);
-				case 9:
-					printf("%d Слот - Лопата", num + 1);
-				}
+				printf("%d элемент -- %s", num + 1, item_names[num]);
 			}
 		case 4: {
 			int num;
@@ -116,21 +98,21 @@ int main()
 			printf("Вау! Теперь у тебя в %d слоте ничего нет!", num);
 		}
 		case 6:
-			printf("Поиск уникальных элементов...");
-			for (int i = 0; i < 10; i++)
+			printf("Вот ваш массив...");
+			for (int num = 0; num < 10; num++) {
+				printf("%d слот -- %s", inventory[num] + 1, item_names[inventory[num]]);
+			}
+			for (int id = 1; id < 10; id++)
 			{
 				int count = 0;
-				for (int j; j<10; j++)
-				{
-					if (inventory[i] == inventory[j]) 
-					{
-						count++;
+				for (int i = 0; i < 10; i++) {
+					if (inventory[i] != 0) {
+						if ( inventory[i] == id ) {
+							count++;
+						}
 					}
-				
-				}
-				if (count == 1) {
-					printf("Предмет в %d слоте -- уникален!", i + 1);
-				}
+				} 
+				printf("%s встречается %d раз", item_names[id], count);
 			}
 		default:
 			printf("Ты по-моему чё-то перепутал...");
