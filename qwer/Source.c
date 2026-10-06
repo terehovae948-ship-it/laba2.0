@@ -121,7 +121,9 @@ int main()
 						}
 					}
 				} 
-				printf("%s встречается %d раз \n", item_names[id], count);
+				if (count != 0) {
+					printf("%s встречается %d раз \n", item_names[id], count);
+				}
 			}
 			break;
 		default:
