@@ -3,12 +3,36 @@
 #pragma warning(disable : 4996)
 int current_day = 1;
 int current_hour = 8;
-static inventory [10]; //0 ничего 1 дерево 2 камень 3 семена 4 мотыга 5 лейка 6 топор 7 корзина 8 сено 9 лопата
+static int inventory [10]; //0 ничего 1 дерево 2 камень 3 семена 4 мотыга 5 лейка 6 топор 7 корзина 8 сено 9 лопата
 int work;
 char item_names[10][15] = 
 {
 	"Ничего", "Дерево", "Камень", "Семена", "Мотыга", "Лейка", "Топор", "Корзина", "Сено", "Лопата"
 };
+void case_2 (int* day_ptr, int* hour_ptr) {
+	int work_hours;
+
+	printf("щас поработаем... \n");
+	printf("сколько изволите работать? \n");
+
+	while (1) {
+		if (scanf("%d", &work_hours) != 1) {
+			scanf("%*s");
+			printf("Дурак. Введи кол-во часов, которое хочешь работать. Целыми числами. \n");
+		}
+		else {
+			break;
+		}
+	}
+	*hour_ptr += work_hours;
+
+	if (*hour_ptr >= 24) {
+		*day_ptr += *hour_ptr / 24;
+		*hour_ptr = *hour_ptr % 24;
+	}
+
+	printf("Вы успешно поработали %d часов! Сейчас %d день, %d часов. \n ", work_hours, *day_ptr, *hour_ptr);
+}
 int main()
 {
 	SetConsoleCP(65001);
@@ -35,25 +59,7 @@ int main()
 			printf("Сейчас: %d день, %d часов \n", current_day, current_hour);
 			break;
 		case 2:
-			printf("щас поработаем... \n");
-			printf("сколько изволите работать? \n");
-			while (1) {
-				if (scanf("%d", &work) != 1) {
-					scanf("%*s");
-					printf("Дурак. Введи кол-во часов, которое хочешь работать. Целыми числами. \n");
-				}
-				else {
-					break;
-				}
-			}
-			current_hour += work;
-				if (current_hour >= 24)
-				{
-					current_day += 1;
-					current_hour -= 24;
-
-				}
-			printf("Вы успешно поработали %d часов! Сейчас %d день, %d часов. \n ", work, current_day, current_hour);
+			case_2(&current_day, &current_hour);
 			break;
 		case 3:
 			printf("Вот ваш инвентарь: \n");
@@ -132,4 +138,3 @@ int main()
 		}
 	}
 	return 0;
-}
