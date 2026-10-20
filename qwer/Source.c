@@ -81,6 +81,48 @@ void case_4(void) {
 	inventory[num - 1] = item;
 	printf("Круто! Теперь у тебя в %d слоте есть что-то!(или нет) \n", num);
 }
+
+void case_5(void) {
+	int num;
+	while (1) {
+		printf("Из какого слота вы хотите выбросить предмет? \n");
+		if (scanf("%d", &num) != 1) {
+			scanf("%*s");
+			printf("Дурак. Введи номер слота, из которого хочешь убрать предмет. Целым числом. \n");
+			continue;
+		}
+		if (num < 1 || num > 10) {
+			printf("Какой %d слот? Их всего 10, от 1 до 10. \n", num);
+		}
+		else {
+			break;
+		}
+	
+	}
+	inventory[num - 1] = 0;
+	printf("Вау! Теперь у тебя в %d слоте ничего нет! \n", num);
+}
+
+void case_6(void) {
+	printf("Вот ваш инвентарь... \n");
+	for (int num = 0; num < 10; num++) {
+		printf("%d слот -- %s \n", num + 1, item_names[inventory[num]]);
+	}
+	for (int id = 1; id < 10; id++)
+	{
+		int count = 0;
+		for (int i = 0; i < 10; i++) {
+			if (inventory[i] != 0) {
+				if (inventory[i] == id) {
+					count++;
+				}
+			}
+		}
+		if (count != 0) {
+			printf("%s встречается %d раз \n", item_names[id], count);
+		}
+	}
+}
 int main()
 {
 	SetConsoleCP(65001);
@@ -116,40 +158,11 @@ int main()
 			case_4();
 			break;
 		case 5: {
-			int num;
-			printf("Из какого слота вы хотите выбросить предмет? \n");
-			while (1) {
-				if (scanf("%d", &num) != 1) {
-					scanf("%*s");
-					printf("Дурак. Введи номер слота, из которого хочешь убрать предмет. Целым числом. \n");
-				}
-				else {
-					break;
-				}
-			}
-			inventory[num - 1] = 0;
-			printf("Вау! Теперь у тебя в %d слоте ничего нет! \n", num);
+			case_5();
 			break;
 		}
 		case 6:
-			printf("Вот ваш массив... \n");
-			for (int num = 0; num < 10; num++) {
-				printf("%d слот -- %s \n", num + 1, item_names[inventory[num]]);
-			}
-			for (int id = 1; id < 10; id++)
-			{
-				int count = 0;
-				for (int i = 0; i < 10; i++) {
-					if (inventory[i] != 0) {
-						if (inventory[i] == id) {
-							count++;
-						}
-					}
-				}
-				if (count != 0) {
-					printf("%s встречается %d раз \n", item_names[id], count);
-				}
-			}
+			case_6();
 			break;
 		default:
 			printf("Ты по-моему чё-то перепутал... \n");
