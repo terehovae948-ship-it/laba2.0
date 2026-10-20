@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <windows.h>
+#include <string.h>
 #pragma warning(disable : 4996)
 int current_day = 1;
 int current_hour = 8;
@@ -8,6 +9,7 @@ char item_names[10][15] =
 {
 	"Ничего", "Дерево", "Камень", "Семена", "Мотыга", "Лейка", "Топор", "Корзина", "Сено", "Лопата"
 };
+char player_name[33];
 
 void case_2(int* day_ptr, int* hour_ptr) {
 	int work_hours;
@@ -128,9 +130,13 @@ int main()
 	SetConsoleCP(65001);
 	SetConsoleOutputCP(65001);
 	int user_action;
+	printf("Как тебя зовут, юный фермер?\n");
+	fgets(player_name, 32, stdin);
+	player_name[strcspn(player_name, "\n")] = NULL;
+
 	while (1)
 	{
-		printf("0 - выход, 1 - посмотреть на часы, 2 - поработать 3 - посмотреть инвентарь, 4 - положить предмет в слот, 5 - выбросить предмет, 6 - уникальные находки \n");
+		printf("Привет, %s! Что же ты хочешь сделать?\n 0 - выход, 1 - посмотреть на часы, 2 - поработать 3 - посмотреть инвентарь, \n 4 - положить предмет в слот, 5 - выбросить предмет, 6 - уникальные находки \n", player_name);
 		while (1) {
 			if (scanf("%d", &user_action) != 1) {
 				scanf("%*s");
