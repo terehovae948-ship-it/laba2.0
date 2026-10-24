@@ -8,6 +8,38 @@ static int inventory [10]; //0 ничего 1 дерево 2 камень 3 се
 char item_names[10][15];
 char player_name[33];
 
+void find_item(void) {
+	char search_item[15];
+	int id = -1;
+	printf("Введите название искомого предмета: ");
+	while (getchar() != '\n' && getchar() != EOF);
+	if (fgets(search_item, sizeof(search_item), stdin) == NULL) {
+		return;
+	}
+	search_item[strcspn(search_item, "\n")] = '\0';
+	for (int i = 0; i < 10; i++) {
+		if (strcmp(item_names[i], search_item) == 0) {
+			id = i;
+			break;
+		}
+	}
+	if (id == -1) {
+		printf("Предмет с названием \"%s\" не существует в игре!\n", search_item);
+		return;
+	}
+	int count = 0;
+	printf("Результаты поиска для \"%s\" (ID: %d):\n", search_item, id);
+	for (int slot = 0; slot < 10; slot++) {
+		if (inventory[slot] == id) {
+			printf("-> Предмет найден в слоте №%d\n", slot + 1);
+			count++;
+		}
+	}
+	if (count == 0) {
+		printf("У тебя в инвентаре нет этого предмета.\n");
+	}
+}
+
 void load_item_names(void) {
 	int count = 0;
 	int id;
@@ -35,7 +67,6 @@ void load_item_names(void) {
 
 void case_2(int* day_ptr, int* hour_ptr) {
 	int work_hours;
-
 	printf("щас поработаем... \n");
 	printf("сколько изволите работать? \n");
 
@@ -159,7 +190,7 @@ int main()
 
 	while (1)
 	{
-		printf("Привет, %s! Что же ты хочешь сделать?\n 0 - выход, 1 - посмотреть на часы, 2 - поработать 3 - посмотреть инвентарь, \n 4 - положить предмет в слот, 5 - выбросить предмет, 6 - уникальные находки \n", player_name);
+		printf("Привет, %s! Что же ты хочешь сделать?\n 0 - выход, 1 - посмотреть на часы, 2 - поработать 3 - посмотреть инвентарь, \n 4 - положить предмет в слот, 5 - выбросить предмет, 6 - уникальные находки, 7 - поиск предмета в сумке \n", player_name);
 		while (1) {
 			if (scanf("%d", &user_action) != 1) {
 				scanf("%*s");
@@ -192,6 +223,9 @@ int main()
 		}
 		case 6:
 			case_6();
+			break;
+		case 7:
+			find_item();
 			break;
 		default:
 			printf("Ты по-моему чё-то перепутал... \n");
