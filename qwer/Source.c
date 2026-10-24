@@ -24,11 +24,11 @@ void find_item(void) {
 		}
 	}
 	if (id == -1) {
-		printf("Предмет с названием \"%s\" не существует в игре!\n", search_item);
+		printf("Предмет с названием %s не существует в игре!\n", search_item);
 		return;
 	}
 	int count = 0;
-	printf("Результаты поиска для \"%s\" (ID: %d):\n", search_item, id);
+	printf("Результаты поиска для %s (ID: %d):\n", search_item, id);
 	for (int slot = 0; slot < 10; slot++) {
 		if (inventory[slot] == id) {
 			printf("-> Предмет найден в слоте №%d\n", slot + 1);
