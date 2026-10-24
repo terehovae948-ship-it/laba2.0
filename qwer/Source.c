@@ -5,11 +5,33 @@
 int current_day = 1;
 int current_hour = 8;
 static int inventory [10]; //0 ничего 1 дерево 2 камень 3 семена 4 мотыга 5 лейка 6 топор 7 корзина 8 сено 9 лопата
-char item_names[10][15] = 
-{
-	"Ничего", "Дерево", "Камень", "Семена", "Мотыга", "Лейка", "Топор", "Корзина", "Сено", "Лопата"
-};
+char item_names[10][15];
 char player_name[33];
+
+void load_item_names(void) {
+	int count = 0;
+	int id;
+	char name[15];
+	FILE* file = fopen("items.txt", "r");
+	if (file == NULL) {
+		printf("А такого файлика-то нет. Ну ладно, так уж и быть, по стандарту тебе что-нибудь оформим.\n");
+		char default_item[10][15] = {
+			"Ничего", "Дерево", "Камень", "Семена", "Мотыга", "Лейка", "Топор", "Корзина", "Сено", "Лопата"
+		};
+		for (int i = 0; i < 10; i++) {
+			strncpy(item_names[i], default_item[i], 14);
+		}
+		printf("Оформленно.\n");
+		return;
+	}
+	while (count < 10 && fscanf(file, "%d %[^\n]", &id, name) == 2) {
+		if (id >= 0 && id < 10) {
+			strncpy(item_names[id], name, 14);
+			count++;
+		}
+	}
+	printf("Загружено.\n");
+}
 
 void case_2(int* day_ptr, int* hour_ptr) {
 	int work_hours;
@@ -132,7 +154,8 @@ int main()
 	int user_action;
 	printf("Как тебя зовут, юный фермер?\n");
 	fgets(player_name, 32, stdin);
-	player_name[strcspn(player_name, "\n")] = NULL;
+	player_name[strcspn(player_name, "\n")] = '\0';
+	load_item_names();
 
 	while (1)
 	{
