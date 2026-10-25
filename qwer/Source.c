@@ -24,14 +24,14 @@ void find_item(void) {
 		}
 	}
 	if (id == -1) {
-		printf("Предмет с названием %s не существует в игре!\n", search_item);
+		printf("А предмета с названием %s не существует в этой реальности!\n", search_item);
 		return;
 	}
 	int count = 0;
-	printf("Результаты поиска для %s (ID: %d):\n", search_item, id);
+	printf("Ищем %s у тебя в сумке...\n", search_item);
 	for (int slot = 0; slot < 10; slot++) {
 		if (inventory[slot] == id) {
-			printf("-> Предмет найден в слоте №%d\n", slot + 1);
+			printf("Предмет найден в слоте %d\n,", slot + 1);
 			count++;
 		}
 	}
@@ -93,10 +93,7 @@ void case_3(void) {
 	for (int num = 0; num < 10; num++)
 	{
 		if (num >= 0 && num < 10) {
-			printf("%d элемент -- %s \n", num + 1, item_names[inventory[num]]);
-		}
-		else {
-			printf("В %d слоте предмет, которого нет. Его ID: %d", num + 1, inventory[num]);
+			printf("%d слот -- %s \n", num + 1, item_names[inventory[num]]);
 		}
 	}
 }
@@ -178,6 +175,31 @@ void case_6(void) {
 		}
 	}
 }
+
+void save_diary(void) {
+	FILE* diary = fopen("diary.txt", "a");
+	if (diary == NULL) {
+		printf("Ошибочка, ни создать, ни открыть файл не получилось");
+		return;
+	}
+	printf("Записываем в дневничочек...\n");
+	printf("Имя -- %s\n", player_name);
+	printf("День -- %d Время -- %d:00\n", current_day, current_hour);
+	case_3();
+	fprintf(diary, "Записываем в дневничочек...\n");
+	fprintf(diary, "Имя -- %s\n", player_name);
+	fprintf(diary, "День -- %d Время -- %d:00\n", current_day, current_hour);
+	fprintf(diary, "Вот ваш инвентарь: \n");
+	for (int num = 0; num < 10; num++)
+	{
+		if (num >= 0 && num < 10) {
+			fprintf(diary, "%d слот -- %s \n", num + 1, item_names[inventory[num]]);
+		}
+	}
+	fprintf(diary, "\n");
+	fclose(diary);
+}
+
 int main()
 {
 	SetConsoleCP(65001);
@@ -190,11 +212,11 @@ int main()
 
 	while (1)
 	{
-		printf("Привет, %s! Что же ты хочешь сделать?\n 0 - выход, 1 - посмотреть на часы, 2 - поработать 3 - посмотреть инвентарь, \n 4 - положить предмет в слот, 5 - выбросить предмет, 6 - уникальные находки, 7 - поиск предмета в сумке \n", player_name);
+		printf("Привет, %s! Что же ты хочешь сделать?\n 0 - выход, 1 - посмотреть на часы, 2 - поработать 3 - посмотреть инвентарь, 4 - положить предмет в слот,\n 5 - выбросить предмет, 6 - уникальные находки, 7 - поиск предмета в сумке, 8 - запись в дневничок \n", player_name);
 		while (1) {
 			if (scanf("%d", &user_action) != 1) {
 				scanf("%*s");
-				printf("Дурак. Введи число от 0 до 6 \n");
+				printf("Дурак. Введи число от 0 до 8 \n");
 			}
 			else {
 				break;
@@ -217,15 +239,17 @@ int main()
 		case 4:
 			case_4();
 			break;
-		case 5: {
+		case 5:
 			case_5();
 			break;
-		}
 		case 6:
 			case_6();
 			break;
 		case 7:
 			find_item();
+			break;
+		case 8:
+			save_diary();
 			break;
 		default:
 			printf("Ты по-моему чё-то перепутал... \n");
