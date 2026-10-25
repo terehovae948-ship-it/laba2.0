@@ -7,6 +7,11 @@ int current_hour = 8;
 static int inventory [10]; //0 ничего 1 дерево 2 камень 3 семена 4 мотыга 5 лейка 6 топор 7 корзина 8 сено 9 лопата
 char item_names[10][15];
 char player_name[33];
+struct NPS_Status {
+	char name[40];
+	char locate[40];
+	int is_working;
+};
 
 void find_item(void) {
 	char search_item[15];
@@ -200,6 +205,71 @@ void save_diary(void) {
 	fclose(diary);
 }
 
+void where_NPC(int hour) {
+	FILE* input = fopen("input.txt", "r");
+	if (input == NULL) {
+		printf("Не могу открыть input.txt\n");
+		return;
+	}
+	char line[120];
+	char npc_name[100];
+	char locate[100];
+	int time1;
+	int time2;
+	int npc_count = 0;
+	struct NPS_Status nps_list[10];
+	while (fgets(line, sizeof(line), input) != NULL) {
+		int res = sscanf(line, "%99[^;];%d;%d;%99[^;\n\r]", npc_name, &time1, &time2, locate);
+		if (res == 4) {
+			int index = -1;
+			for (int i = 0; i < npc_count; i++) {
+				if (strcmp(nps_list[i].name, npc_name) == 0) {
+					index = i;
+					break;
+				}
+			}
+			if (index == -1 && npc_count < 10) {
+				index = npc_count;
+				strncpy(nps_list[index].name, npc_name, 39);
+				nps_list[index].name[39] = '\0';
+
+				strncpy(nps_list[index].locate, "Спит дома", 39);
+				nps_list[index].locate[39] = '\0';
+
+				nps_list[index].is_working = 0;
+				npc_count++;
+			}
+
+			if (index != -1 && hour >= time1 && hour < time2) {
+				strncpy(nps_list[index].locate, locate, 39);
+				nps_list[index].locate[39] = '\0';
+				nps_list[index].is_working = 1;
+			}
+		}
+	}
+	fclose(input);
+	printf("Сейчас %d час, где же наши нпс?\n", hour);
+
+	FILE* output = fopen("output.txt", "a");
+	if (output == NULL) {
+		printf("Не могу открыть файл output.txt для записи\n");
+		return;
+	}
+
+	for (int i = 0; i < npc_count; i++) {
+		if (nps_list[i].is_working == 1) {
+			printf("%s сейчас тусит тут: %s\n", nps_list[i].name, nps_list[i].locate);
+			fprintf(output, "%s сейчас тусит тут: %s\n", nps_list[i].name, nps_list[i].locate);
+		}
+		else {
+			printf("%s сейчас %s\n", nps_list[i].name, nps_list[i].locate);
+			fprintf(output, "%s сейчас %s\n", nps_list[i].name, nps_list[i].locate);
+		}
+	}
+
+	fclose(output);
+}
+
 int main()
 {
 	SetConsoleCP(65001);
@@ -212,11 +282,11 @@ int main()
 
 	while (1)
 	{
-		printf("Привет, %s! Что же ты хочешь сделать?\n 0 - выход, 1 - посмотреть на часы, 2 - поработать 3 - посмотреть инвентарь, 4 - положить предмет в слот,\n 5 - выбросить предмет, 6 - уникальные находки, 7 - поиск предмета в сумке, 8 - запись в дневничок \n", player_name);
+		printf("Привет, %s! Что же ты хочешь сделать?\n 0 - выход, 1 - посмотреть на часы, 2 - поработать 3 - посмотреть инвентарь, 4 - положить предмет в слот,\n 5 - выбросить предмет, 6 - уникальные находки, 7 - поиск предмета в сумке, 8 - запись в дневничок, 9 - посмотреть, где сейчас тусят нпс \n", player_name);
 		while (1) {
 			if (scanf("%d", &user_action) != 1) {
 				scanf("%*s");
-				printf("Дурак. Введи число от 0 до 8 \n");
+				printf("Дурак. Введи число от 0 до 9 \n");
 			}
 			else {
 				break;
@@ -250,6 +320,9 @@ int main()
 			break;
 		case 8:
 			save_diary();
+			break;
+		case 9:
+			where_NPC(current_hour);
 			break;
 		default:
 			printf("Ты по-моему чё-то перепутал... \n");
