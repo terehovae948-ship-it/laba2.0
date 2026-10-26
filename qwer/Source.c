@@ -10,7 +10,6 @@ char player_name[33];
 struct NPS_Status {
 	char name[40];
 	char locate[40];
-	int is_working;
 };
 
 void find_item(void) {
@@ -236,14 +235,12 @@ void where_NPC(int hour) {
 				strncpy(nps_list[index].locate, "Спит дома", 39);
 				nps_list[index].locate[39] = '\0';
 
-				nps_list[index].is_working = 0;
 				npc_count++;
 			}
 
 			if (index != -1 && hour >= time1 && hour < time2) {
 				strncpy(nps_list[index].locate, locate, 39);
 				nps_list[index].locate[39] = '\0';
-				nps_list[index].is_working = 1;
 			}
 		}
 	}
@@ -257,14 +254,8 @@ void where_NPC(int hour) {
 	}
 
 	for (int i = 0; i < npc_count; i++) {
-		if (nps_list[i].is_working == 1) {
 			printf("%s сейчас тусит тут: %s\n", nps_list[i].name, nps_list[i].locate);
 			fprintf(output, "%s сейчас тусит тут: %s\n", nps_list[i].name, nps_list[i].locate);
-		}
-		else {
-			printf("%s сейчас %s\n", nps_list[i].name, nps_list[i].locate);
-			fprintf(output, "%s сейчас %s\n", nps_list[i].name, nps_list[i].locate);
-		}
 	}
 
 	fclose(output);
