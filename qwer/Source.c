@@ -1,7 +1,13 @@
 #include <stdio.h>
 #include <windows.h>
 #include <string.h>
+#include <stdlib.h>
+#include <conio.h>
+#include <time.h>
 #pragma warning(disable : 4996)
+#define wall '#'
+#define user '@'
+#define empty '.'
 int current_day = 1;
 int current_hour = 8;
 static int inventory [10]; //0 ничего 1 дерево 2 камень 3 семена 4 мотыга 5 лейка 6 топор 7 корзина 8 сено 9 лопата
@@ -119,7 +125,8 @@ void case_4(void) {
 			break;
 		}
 	}
-	printf("Напоминаю, что: 0 - ничего, 1 - дерево, 2 - камень, 3 - семена, 4 - мотыга, 5 - лейка 6 - топор, 7 - корзина, 8 - сено, 9 - лопата \n");
+	printf("Напоминаю, что: 0 - ничего, 1 - дерево, 2 - камень, 3 - семена, 4 - мотыга, 5 - лейка"
+		"6 - топор, 7 - корзина, 8 - сено, 9 - лопата \n");
 	while (1) {
 		printf("Что вы хотите положить в этот слот? \n");
 		if (scanf("%d", &item) != 1) {
@@ -261,6 +268,82 @@ void where_NPC(int hour) {
 	fclose(output);
 }
 
+void adventure(void) {
+	int height = (rand() % (30 - 5 + 1) + 5);
+	int width = (rand() % (30 - 5 + 1) + 5);
+	int userH = 1;
+	int userW = 1;
+	char** map;
+
+	map = (char**)malloc(height * sizeof(char*));
+	for (int i = 0; i < height; i++) {
+		map[i] = (char*)malloc(width * sizeof(char));
+	}
+
+	for (int h = 0; h < height; h++) {
+		for (int w = 0; w < width; w++) {
+			if (h == 0 || h == height - 1 || w == 0 || w == width - 1) {
+				map[h][w] = wall;
+			}
+			else {
+				if (rand() % 5 == 0) {
+					map[h][w] = 'R';
+				}
+				else {
+					map[h][w] = empty;
+				}
+			}
+		}
+	}
+	map[userH][userW] = empty;
+
+	int game = 1;
+	while (game == 1) {
+		system("cls");
+		printf("Ты забрёл в лес %d * %d метров. Ходить на wasd. Для выхода нажми Q\n", height, width);
+		for (int h = 0; h < height; h++) {
+			for (int w = 0; w < width; w++) {
+				if (h == userH && w == userW) {
+					printf("%c", user);
+				}
+				else {
+					printf("%c", map[h][w]);
+				}
+			}
+			printf("\n");
+		}
+		char way = _getch();
+		int nextH = userH;
+		int nextW = userW;
+		if (way == 'W' || way == 'w') {
+			nextH--;
+		}
+		if (way == 'A' || way == 'a') {
+			nextW--;
+		}
+		if (way == 'S' || way == 's') {
+			nextH++;
+		}
+		if (way == 'D' || way == 'd') {
+			nextW++;
+		}
+		if (way == 'Q' || way == 'q') {
+			game = 0;
+			break;
+		}
+
+		if (map[nextH][nextW] != wall && map[nextH][nextW] != 'R') {
+			userH = nextH;
+			userW = nextW;
+		}
+	}
+
+	for (int i = 0; i < height; i++) {
+		free(map[i]);
+	}
+	free(map);
+}
+
 int main()
 {
 	SetConsoleCP(65001);
@@ -273,7 +356,9 @@ int main()
 
 	while (1)
 	{
-		printf("Привет, %s! Что же ты хочешь сделать?\n 0 - выход, 1 - посмотреть на часы, 2 - поработать 3 - посмотреть инвентарь, 4 - положить предмет в слот,\n 5 - выбросить предмет, 6 - уникальные находки, 7 - поиск предмета в сумке, 8 - запись в дневничок, 9 - посмотреть, где сейчас тусят нпс \n", player_name);
+		printf("Привет, %s! Что же ты хочешь сделать?\n 0 - выход, 1 - посмотреть на часы, 2 - поработать 3 - посмотреть инвентарь, "
+			"4 - положить предмет в слот,\n 5 - выбросить предмет, 6 - уникальные находки, 7 - поиск предмета в сумке, "
+			"8 - запись в дневничок,\n 9 - посмотреть, где сейчас тусят нпс, 10 - отправится в приключение \n", player_name);
 		while (1) {
 			if (scanf("%d", &user_action) != 1) {
 				scanf("%*s");
@@ -314,6 +399,9 @@ int main()
 			break;
 		case 9:
 			where_NPC(current_hour);
+			break;
+		case 10:
+			adventure();
 			break;
 		default:
 			printf("Ты по-моему чё-то перепутал... \n");
