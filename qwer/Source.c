@@ -275,6 +275,7 @@ void adventure(void) {
 	int needNewMap = 1;
 	int game = 1;
 	int location = 1;
+	int distanseFromHome = 0;
 	while (game == 1) {
 		if (needNewMap == 1) {
 			if (map != NULL) {
@@ -323,8 +324,8 @@ void adventure(void) {
 			int exitH = rand() % (height - 2) + 1;
 			int exitW = rand() % (width - 2) + 1;
 			if (exitH == 1 && exitW == 1) {
-				exitH = exitH + 1;
-				exitW = exitW + 1;
+				exitH++;
+				exitW++;
 			}
 			map[exitH][exitW] = '0';
 
@@ -340,7 +341,12 @@ void adventure(void) {
 
 		}
 		system("cls");
-		printf("Ты забрёл в лес %d * %d метров. Ходить на wasd. Для выхода нажми Q\n", height, width);
+		if (location == 1) {
+			printf("Ты забрёл в лес %d * %d метров. Ты уже в %d км от дома! Ходить на wasd. Для выхода встань на '^' и нажми Q\n", height, width, distanseFromHome);
+		}
+		else {
+			printf("Ты забрёл в пещеру %d * %d метров. Ты уже в %d км от дома! Ходить на wasd. Для выхода встань на '^' и нажми Q\n", height, width, distanseFromHome);
+		}
 		for (int h = 0; h < height; h++) {
 			for (int w = 0; w < width; w++) {
 				if (h == userH && w == userW) {
@@ -375,6 +381,7 @@ void adventure(void) {
 
 		if (map[userH][userW] == '0') {
 			needNewMap = 1;
+			distanseFromHome++;
 			if (location == 1) {
 				location = 0;
 			}
@@ -383,7 +390,7 @@ void adventure(void) {
 			}
 		}
 
-		if (map[nextH][nextW] != wall && map[nextH][nextW] != 'R') {
+		if (map[nextH][nextW] != wall && map[nextH][nextW] != 'R' && map[nextH][nextW] != 'T') {
 			userH = nextH;
 			userW = nextW;
 		}
