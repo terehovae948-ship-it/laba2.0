@@ -269,36 +269,57 @@ void where_NPC(int hour) {
 }
 
 void adventure(void) {
-	int height = (rand() % (30 - 5 + 1) + 5);
-	int width = (rand() % (30 - 5 + 1) + 5);
-	int userH = 1;
-	int userW = 1;
-	char** map;
-
-	map = (char**)malloc(height * sizeof(char*));
-	for (int i = 0; i < height; i++) {
-		map[i] = (char*)malloc(width * sizeof(char));
-	}
-
-	for (int h = 0; h < height; h++) {
-		for (int w = 0; w < width; w++) {
-			if (h == 0 || h == height - 1 || w == 0 || w == width - 1) {
-				map[h][w] = wall;
-			}
-			else {
-				if (rand() % 5 == 0) {
-					map[h][w] = 'R';
-				}
-				else {
-					map[h][w] = empty;
-				}
-			}
-		}
-	}
-	map[userH][userW] = empty;
-
+	int height, width;
+	int userH, userW;
+	char** map = NULL;
+	int needNewMap = 1;
 	int game = 1;
 	while (game == 1) {
+		if (needNewMap == 1) {
+			if (map != NULL) {
+				for (int i = 0; i < height; i++) {
+					free(map[i]);
+				}
+				free(map);
+			}
+			height = (rand() % (30 - 5 + 1) + 5);
+			width = (rand() % (30 - 5 + 1) + 5);
+
+			map = (char**)malloc(height * sizeof(char*));
+			for (int i = 0; i < height; i++) {
+				map[i] = (char*)malloc(width * sizeof(char));
+			}
+
+			for (int h = 0; h < height; h++) {
+				for (int w = 0; w < width; w++) {
+					if (h == 0 || h == height - 1 || w == 0 || w == width - 1) {
+						map[h][w] = wall;
+					}
+					else {
+						if (rand() % 5 == 0) {
+							map[h][w] = 'R';
+						}
+						else {
+							map[h][w] = empty;
+						}
+					}
+				}
+			}
+			userH = 1;
+			userW = 1;
+			map[userH][userW] = empty;
+
+			int exitH = rand() % (height - 2) + 1;
+			int exitW = rand() % (width - 2) + 1;
+			if (exitH == 1 && exitW == 1) {
+				exitH = exitH + 1;
+				exitW = exitW + 1;
+			}
+			map[exitH][exitW] = '0';
+
+			needNewMap = 0;
+
+		}
 		system("cls");
 		printf("Ты забрёл в лес %d * %d метров. Ходить на wasd. Для выхода нажми Q\n", height, width);
 		for (int h = 0; h < height; h++) {
@@ -312,6 +333,7 @@ void adventure(void) {
 			}
 			printf("\n");
 		}
+
 		char way = _getch();
 		int nextH = userH;
 		int nextW = userW;
@@ -327,9 +349,13 @@ void adventure(void) {
 		if (way == 'D' || way == 'd') {
 			nextW++;
 		}
-		if (way == 'Q' || way == 'q') {
+		if ((way == 'Q' || way == 'q')) {
 			game = 0;
 			break;
+		}
+
+		if (map[userH][userW] == '0') {
+			needNewMap = 1;
 		}
 
 		if (map[nextH][nextW] != wall && map[nextH][nextW] != 'R') {
@@ -337,12 +363,12 @@ void adventure(void) {
 			userW = nextW;
 		}
 	}
-
 	for (int i = 0; i < height; i++) {
 		free(map[i]);
 	}
 	free(map);
 }
+		
 
 int main()
 {
