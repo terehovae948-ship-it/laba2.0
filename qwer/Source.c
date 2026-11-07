@@ -274,6 +274,7 @@ void adventure(void) {
 	char** map = NULL;
 	int needNewMap = 1;
 	int game = 1;
+	int location = 1;
 	while (game == 1) {
 		if (needNewMap == 1) {
 			if (map != NULL) {
@@ -282,8 +283,15 @@ void adventure(void) {
 				}
 				free(map);
 			}
-			height = (rand() % (30 - 5 + 1) + 5);
-			width = (rand() % (30 - 5 + 1) + 5);
+
+			if (location == 1) {
+				height = (rand() % (30 - 5 + 1) + 5);
+				width = (rand() % (30 - 5 + 1) + 5);
+			}
+			else {
+				height = (rand() % (8 - 5 + 1) + 5);
+				width = (rand() % (8 - 5 + 1) + 5);
+			}
 
 			map = (char**)malloc(height * sizeof(char*));
 			for (int i = 0; i < height; i++) {
@@ -296,7 +304,10 @@ void adventure(void) {
 						map[h][w] = wall;
 					}
 					else {
-						if (rand() % 5 == 0) {
+						if (rand() % 5 == 0 && location == 1) {
+							map[h][w] = 'T';
+						}
+						else if (rand() % 5 == 0 && location == 0) {
 							map[h][w] = 'R';
 						}
 						else {
@@ -316,6 +327,14 @@ void adventure(void) {
 				exitW = exitW + 1;
 			}
 			map[exitH][exitW] = '0';
+
+			int fireH = rand() % (height - 2) + 1;
+			int fireW = rand() % (width - 2) + 1;
+			if (fireH == 1 && fireW == 1 || fireH == exitH && fireW == exitW) {
+				fireH = fireH + 2;
+				fireW = fireW + 2;
+			}
+			map[fireH][fireW] = '^';
 
 			needNewMap = 0;
 
@@ -349,13 +368,19 @@ void adventure(void) {
 		if (way == 'D' || way == 'd') {
 			nextW++;
 		}
-		if ((way == 'Q' || way == 'q')) {
+		if ((way == 'Q' || way == 'q') && map[userH][userW] == '^') {
 			game = 0;
 			break;
 		}
 
 		if (map[userH][userW] == '0') {
 			needNewMap = 1;
+			if (location == 1) {
+				location = 0;
+			}
+			else {
+				location = 1;
+			}
 		}
 
 		if (map[nextH][nextW] != wall && map[nextH][nextW] != 'R') {
