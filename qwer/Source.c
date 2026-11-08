@@ -329,8 +329,8 @@ void adventure(void) {
 			}
 			map[exitH][exitW] = '0';
 
-			int fireH = rand() % (height - 2) + 1;
-			int fireW = rand() % (width - 2) + 1;
+			int fireH = rand() % (height - 4) + 1;
+			int fireW = rand() % (width - 4) + 1;
 			if (fireH == 1 && fireW == 1 || fireH == exitH && fireW == exitW) {
 				fireH = fireH + 2;
 				fireW = fireW + 2;
