@@ -379,6 +379,11 @@ void adventure(void) {
 			break;
 		}
 
+		if (map[nextH][nextW] != wall && map[nextH][nextW] != 'R' && map[nextH][nextW] != 'T') {
+			userH = nextH;
+			userW = nextW;
+		}
+
 		if (map[userH][userW] == '0') {
 			needNewMap = 1;
 			distanseFromHome++;
@@ -390,10 +395,6 @@ void adventure(void) {
 			}
 		}
 
-		if (map[nextH][nextW] != wall && map[nextH][nextW] != 'R' && map[nextH][nextW] != 'T') {
-			userH = nextH;
-			userW = nextW;
-		}
 	}
 	for (int i = 0; i < height; i++) {
 		free(map[i]);
