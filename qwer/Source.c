@@ -299,7 +299,7 @@ void adventure(void) {
 				map[i] = (char*)malloc(width * sizeof(char));
 			}
 
-			for (int h = 0; h < height; h++) {
+			for (int h = 0; h < height; h++) {0
 				for (int w = 0; w < width; w++) {
 					if (h == 0 || h == height - 1 || w == 0 || w == width - 1) {
 						map[h][w] = wall;
@@ -335,7 +335,7 @@ void adventure(void) {
 				fireH = fireH + 2;
 				fireW = fireW + 2;
 			}
-			map[fireH][fireW] = '^';
+			map[fireH][fireW] = 'K';
 
 			needNewMap = 0;
 
@@ -374,7 +374,7 @@ void adventure(void) {
 		if (way == 'D' || way == 'd') {
 			nextW++;
 		}
-		if ((way == 'Q' || way == 'q') && map[userH][userW] == '^') {
+		if ((way == 'Q' || way == 'q') && map[userH][userW] == 'K') {
 			game = 0;
 			break;
 		}
