@@ -299,7 +299,7 @@ void adventure(void) {
 				map[i] = (char*)malloc(width * sizeof(char));
 			}
 
-			for (int h = 0; h < height; h++) {0
+			for (int h = 0; h < height; h++) {
 				for (int w = 0; w < width; w++) {
 					if (h == 0 || h == height - 1 || w == 0 || w == width - 1) {
 						map[h][w] = wall;
