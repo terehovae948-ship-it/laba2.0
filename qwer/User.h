@@ -1,6 +1,6 @@
 #ifndef user_h
 #define user_h
-struct user {
+typedef struct {
     char name[32];
     int hp;
     int max_hp;
@@ -9,5 +9,5 @@ struct user {
     int gold;
     int userH, userW;
     int inventory[11];
-};
+} User;
 #endif

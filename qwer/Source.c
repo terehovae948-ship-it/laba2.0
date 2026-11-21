@@ -5,9 +5,8 @@
 #include <conio.h>
 #include <time.h>
 #pragma warning(disable : 4996)
-#define wall '#'
-#define user '@'
-#define empty '.'
+#include "Map.h"
+#include "User.h"
 int current_day = 1;
 int current_hour = 8;
 static int inventory [10]; //0 ничего 1 дерево 2 камень 3 семена 4 мотыга 5 лейка 6 топор 7 корзина 8 сено 9 лопата
@@ -269,137 +268,65 @@ void where_NPC(int hour) {
 }
 
 void adventure(void) {
-	int height, width;
-	int userH, userW;
-	char** map = NULL;
+	map m;
+	m.maap = NULL;
+	m.location = 1;
+
+	User u;
+	u.userH = 1;
+	u.userW = 1;
+
 	int needNewMap = 1;
 	int game = 1;
-	int location = 1;
-	int distanseFromHome = 0;
-	while (game == 1) {
+	int distanse = 1;
+
+	while (1) {
 		if (needNewMap == 1) {
-			if (map != NULL) {
-				for (int i = 0; i < height; i++) {
-					free(map[i]);
-				}
-				free(map);
-			}
-
-			if (location == 1) {
-				height = (rand() % (30 - 5 + 1) + 5);
-				width = (rand() % (30 - 5 + 1) + 5);
-			}
-			else {
-				height = (rand() % (8 - 5 + 1) + 5);
-				width = (rand() % (8 - 5 + 1) + 5);
-			}
-
-			map = (char**)malloc(height * sizeof(char*));
-			for (int i = 0; i < height; i++) {
-				map[i] = (char*)malloc(width * sizeof(char));
-			}
-
-			for (int h = 0; h < height; h++) {
-				for (int w = 0; w < width; w++) {
-					if (h == 0 || h == height - 1 || w == 0 || w == width - 1) {
-						map[h][w] = wall;
-					}
-					else {
-						if (rand() % 5 == 0 && location == 1) {
-							map[h][w] = 'T';
-						}
-						else if (rand() % 5 == 0 && location == 0) {
-							map[h][w] = 'R';
-						}
-						else {
-							map[h][w] = empty;
-						}
-					}
-				}
-			}
-			userH = 1;
-			userW = 1;
-			map[userH][userW] = empty;
-
-			int exitH = rand() % (height - 2) + 1;
-			int exitW = rand() % (width - 2) + 1;
-			if (exitH == 1 && exitW == 1) {
-				exitH++;
-				exitW++;
-			}
-			map[exitH][exitW] = '0';
-
-			int fireH = rand() % (height - 4) + 1;
-			int fireW = rand() % (width - 4) + 1;
-			if (fireH == 1 && fireW == 1 || fireH == exitH && fireW == exitW) {
-				fireH = fireH + 2;
-				fireW = fireW + 2;
-			}
-			map[fireH][fireW] = 'K';
-
+			create(&m, &u);
 			needNewMap = 0;
+		}
 
-		}
-		system("cls");
-		if (location == 1) {
-			printf("Ты забрёл в лес %d * %d метров. Ты уже в %d км от дома! Ходить на wasd. Для выхода встань на '^' и нажми Q\n", height, width, distanseFromHome);
-		}
-		else {
-			printf("Ты забрёл в пещеру %d * %d метров. Ты уже в %d км от дома! Ходить на wasd. Для выхода встань на '^' и нажми Q\n", height, width, distanseFromHome);
-		}
-		for (int h = 0; h < height; h++) {
-			for (int w = 0; w < width; w++) {
-				if (h == userH && w == userW) {
-					printf("%c", user);
-				}
-				else {
-					printf("%c", map[h][w]);
-				}
-			}
-			printf("\n");
-		}
+		draw(&m, &u, distanse);
 
 		char way = _getch();
-		int nextH = userH;
-		int nextW = userW;
-		if (way == 'W' || way == 'w') {
+		int nextH = u.userH;
+		int nextW = u.userW;
+
+		if (way == 'w' || way == 'W') {
 			nextH--;
 		}
-		if (way == 'A' || way == 'a') {
+		if (way == 'a' || way == 'A') {
 			nextW--;
 		}
-		if (way == 'S' || way == 's') {
+		if (way == 's' || way == 'S') {
 			nextH++;
 		}
-		if (way == 'D' || way == 'd') {
+		if (way == 'd' || way == 'D') {
 			nextW++;
 		}
-		if ((way == 'Q' || way == 'q') && map[userH][userW] == 'K') {
-			game = 0;
+
+		if ((way == 'q' || way == 'Q') && m.maap[u.userH][u.userW] == fier) {
 			break;
 		}
 
-		if (map[nextH][nextW] != wall && map[nextH][nextW] != 'R' && map[nextH][nextW] != 'T') {
-			userH = nextH;
-			userW = nextW;
+		if (m.maap[nextH][nextW] != wall && m.maap[nextH][nextW] != 'R' && m.maap[nextH][nextW] != 'T') {
+			u.userH = nextH;
+			u.userW = nextW;
 		}
 
-		if (map[userH][userW] == '0') {
+		if (m.maap[u.userH][u.userW] == Exit) {
 			needNewMap = 1;
-			distanseFromHome++;
-			if (location == 1) {
-				location = 0;
+			distanse++;
+			if (m.location == 1) {
+				m.location = 0;
 			}
 			else {
-				location = 1;
+				m.location = 1;
 			}
 		}
+	}
 
-	}
-	for (int i = 0; i < height; i++) {
-		free(map[i]);
-	}
-	free(map);
+	free_(&m);
 }
 		
 
