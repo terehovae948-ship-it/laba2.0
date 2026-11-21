@@ -67,7 +67,7 @@ void create(map* m, User* u) {
 	m->maap[fireH][fireW] = fier;
 }
 
-void draw(map* m, User* u, int distance) {
+void draw(const map* m, User* u, int distance) {
 	system("cls");
 	if (m->location == 1) {
 		printf("Ты забрёл в лес %d * %d метров. Ты уже в %d км от дома! Ходить на wasd. Для выхода встань на 'K' и нажми Q\n", m->height, m->width, distance);

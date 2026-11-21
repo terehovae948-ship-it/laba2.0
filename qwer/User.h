@@ -8,6 +8,12 @@ typedef struct {
     int max_stamina;
     int gold;
     int userH, userW;
-    int inventory[11];
+    int inventory[10];
 } User;
+
+void case_3(const User* u);
+void case_4(User* u);
+void case_5(User* u);
+void case_6(const User* u);
+void find_item(const User* u);
 #endif
