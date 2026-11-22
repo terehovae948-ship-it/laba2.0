@@ -8,6 +8,7 @@ void free_(map* m) {
 			free(m->maap[i]);
 		}
 		free(m->maap);
+		printf("Память структуры по адресу %p освобождена\n", (void*)m);
 	}
 }
 

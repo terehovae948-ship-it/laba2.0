@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "User.h"
 #include "Utils.h"
 #pragma warning(disable : 4996)
@@ -118,4 +120,56 @@ void find_item(const User* u) {
 	if (count == 0) {
 		printf("У тебя в инвентаре нет этого предмета.\n");
 	}
+}
+
+void free_u(User* u) {
+	if (u != NULL) {
+		free(u);
+		printf("Память структуры по адресу %p освобождена\n", (void*)u);
+	}
+}
+
+User* create_user(User* curr_u) {
+	if (curr_u != 0) {
+		char choice;
+		while (1) {
+			printf("Но юнный фермер уже существует. Ты хочешь его променять на другого? Y/N\n");
+			scanf(" %c", &choice);
+			while (getchar() != '\n');
+			if ( choice == 'N' || choice == 'n') {
+				printf("Правильно, старых фермеров на новых не меняют\n");
+				return curr_u;
+			}
+			else if (choice == 'Y' || choice == 'y') {
+				printf("Эх ты, такого фермера теряешь. Ну ладно, дело твоё\n");
+				free_u(curr_u);
+				break;
+			}
+			else {
+				printf("ес ор но?\n");
+			}
+		}
+	}
+	else {
+		while (getchar() != '\n');
+	}
+	User* u = (User*)calloc(1, sizeof(User));
+
+	printf("Назови своё имя, юнный фермер.\n");
+	fgets(u->name, sizeof(u->name), stdin);
+	u->name[strcspn(u->name, "\n")] = '\0';
+
+	u->max_hp = 100;
+	u->hp = u->max_hp;
+	u->max_stamina = 100;
+	u->stamina = u->max_stamina;
+	u->gold = 50;
+	u->userH = 1;
+	u->userW = 1;
+
+	return u;
+}
+
+void user_card(User* u) {
+
 }

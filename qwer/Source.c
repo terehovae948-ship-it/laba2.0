@@ -79,20 +79,17 @@ int main()
 {
 	int current_day = 1;
 	int current_hour = 8;
-	User u = { 0 };
+	User* u = NULL;
 	SetConsoleCP(65001);
 	SetConsoleOutputCP(65001);
 	int user_action;
-	printf("Как тебя зовут, юный фермер?\n");
-	fgets(u.name, 32, stdin);
-	u.name[strcspn(u.name, "\n")] = '\0';
 	load_item_names();
 
 	while (1)
 	{
-		printf("Привет, %s! Что же ты хочешь сделать?\n 0 - выход, 1 - посмотреть на часы, 2 - поработать 3 - посмотреть инвентарь, "
-			"4 - положить предмет в слот,\n 5 - выбросить предмет, 6 - уникальные находки, 7 - поиск предмета в сумке, "
-			"8 - запись в дневничок,\n 9 - посмотреть, где сейчас тусят нпс, 10 - отправится в приключение \n", u.name);
+		printf("Привет, %s! Что же ты хочешь сделать?\n 0 - выход, 1 - создать перссонажа, 2 - карточка персонажа 3 - посмотреть на часы, "
+			"4 - поработать\n 5 - показать инвентарь, 6 - положить предмет в инвентарь 7 - выбросить предмет из инвентаря "
+			"8 - уникальные находеи\n 9 - поиск по имени, 10 - записать в дневничок \n, 11 - Где НПС, 12 - отправится в приключение\n", u->name);
 		while (1) {
 			if (scanf("%d", &user_action) != 1) {
 				scanf("%*s");
@@ -104,38 +101,41 @@ int main()
 		}
 		switch (user_action)
 		{
-		case 0:
+		case EEExit:
 			printf("Пока! \n");
 			exit(0);
-		case 1:
+		case User_create:
+			u = create_user(u);
+			break;
+		case Watch_hour:
 			printf("Сейчас: %d день, %d часов \n", current_day, current_hour);
 			break;
-		case 2:
+		case Wooork:
 			case_2(&current_day, &current_hour);
 			break;
-		case 3:
-			case_3(&u);
+		case Watch_inventory:
+			case_3(u);
 			break;
-		case 4:
-			case_4(&u);
+		case Put_in_inventory:
+			case_4(u);
 			break;
-		case 5:
-			case_5(&u);
+		case Put_out_inventory:
+			case_5(u);
 			break;
-		case 6:
-			case_3(&u);
-			case_6(&u);
+		case Unic_find:
+			case_3(u);
+			case_6(u);
 			break;
-		case 7:
-			find_item(&u);
+		case Find_name:
+			find_item(u);
 			break;
-		case 8:
-			save_diary(&u);
+		case Write_diary:
+			save_diary(u);
 			break;
-		case 9:
+		case NPC_were:
 			where_NPC(current_hour);
 			break;
-		case 10:
+		case Trip:
 			adventure();
 			break;
 		default:
