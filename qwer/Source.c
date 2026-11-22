@@ -91,7 +91,7 @@ int main()
 
 	while (1)
 	{
-		printf("Привет, %s! Что же ты хочешь сделать?\n 0 - выход, 1 - создать перссонажа, 2 - карточка персонажа 3 - посмотреть на часы, "
+		printf("Привет, %s! Что же ты хочешь сделать?\n 0 - выход, 1 - создать перссонажа, 2 - карточка персонажа 3 - управлять временем, "
 			"4 - показать инвентарь\n 5 - поработать, 6 - положить предмет в инвентарь 7 - выбросить предмет из инвентаря "
 			"8 - уникальные находеи\n 9 - поиск по имени, 10 - записать в дневничок \n, 11 - Где НПС, 12 - отправится в приключение\n", u->name);
 		while (1) {
@@ -114,9 +114,30 @@ int main()
 		case User_card:
 			user_card(u, current_day, current_hour);
 			break;
-		case Watch_hour:
-			printf("Сейчас: %d день, %d часов \n", current_day, current_hour);
-			break;
+		case Control_hour:
+			printf("Ты хочешь: 1 - посмотреть время, 2 - пропустить время (но дальше 02:00 нельзя за раз), 3 - Спать\n");
+			int choice;
+			while (1) {
+				if (scanf("%d", &choice) != 1) {
+					scanf("%*s");
+					printf("Дурак. Введи число от 0 до 9 \n");
+				}
+				else {
+					break;
+				}
+			}
+			if (choice == 1) {
+				printf("Сейчас: %d день, %d часов \n", current_day, current_hour);
+				break;
+			}
+			else if (choice == 2) {
+				skip_time(&current_day, &current_hour);
+				break;
+			}
+			else if (choice == 3) {
+				slepp(u, &current_day, &current_hour);
+				break;
+			}
 		case Wooork:
 			case_2(&current_day, &current_hour);
 			break;

@@ -11,7 +11,7 @@
 	 EEExit = 0,
 	 User_create,
 	 User_card,
-	 Watch_hour,
+	 Control_hour,
 	 Watch_inventory,
 	 Wooork,
 	 Put_in_inventory,
@@ -30,4 +30,6 @@ void load_item_names(void);
 void case_2(int* day_ptr, int* hour_ptr);
 void save_diary(const User* u);
 void where_NPC(int hour);
+void skip_time(int* day, int* hour);
+void slepp(User* u, int* day, int* hour);
 #endif

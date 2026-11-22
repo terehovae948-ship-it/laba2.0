@@ -139,4 +139,52 @@ void where_NPC(int hour) {
 	}
 
 	fclose(output);
+
+}
+
+void skip_time(int* day, int* hour) {
+	int skip;
+	int after_skip;
+	printf("сколько вы хотите пропустить?\n");
+	while (1) {
+		if (scanf("%d", &skip) != 1) {
+			scanf("%*s");
+			printf("Дурак. Введи кол-во часов, которое хочешь пропустить. Целыми числами. \n");
+		}
+		else {
+			break;
+		}
+	}
+	if (*hour == 0 || *hour == 1) {
+		if (*hour + skip > 2) {
+			printf("Куда ты так разогнался? А спать когда?\n");
+			return;
+		}
+	}
+	after_skip = *hour + skip;
+	if (after_skip >= 24) {
+		after_skip = after_skip % 24;
+		if (after_skip > 2) {
+			printf("Куда ты так разогнался? А спать когда? Было бы %d часов\n", after_skip);
+			return;
+		}
+		*day = after_skip / 24;
+		*hour = after_skip;
+		printf("Сейчас %d часов\n", *hour);
+	}
+	*hour = after_skip;
+	printf("Сейчас %d часов\n", *hour);
+
+}
+
+void slepp(User* u, int* day, int* hour) {
+	if (u == NULL) {
+		printf("А как фермер может спать, если фермера не существует?\n");
+		return;
+	}
+	printf("Всё, отбой, восстанавливаем силы\n");
+	u->stamina = u->max_stamina;
+	*day += 1;
+	*hour = 8;
+	printf("Ты проспал всю ночь. Сейчас %d день %d часов\n", *day, *hour);
 }
