@@ -1,6 +1,7 @@
 #include "Map.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "Utils.h"
 
 void free_(map* m) {
 	if (m->maap != NULL) {
@@ -68,7 +69,7 @@ void create(map* m, User* u) {
 	m->maap[fireH][fireW] = fier;
 }
 
-void draw(const map* m, User* u, int distance) {
+void draw(const map* m, User* u, int distance, int* current_hour) {
 	system("cls");
 	if (m->location == 1) {
 		printf("Ты забрёл в лес %d * %d метров. Ты уже в %d км от дома! Ходить на wasd. Для выхода встань на 'K' и нажми Q\n", m->height, m->width, distance);
@@ -88,4 +89,79 @@ void draw(const map* m, User* u, int distance) {
 		}
 		printf("\n");
 	}
+	printf("HP: %d | Stamina: %d | Gold: %d | Hour: %d", u->hp, u->stamina, u->gold, *current_hour);
+}
+
+void adventure(User* u, int* current_day, int* current_hour) {
+	if (u == NULL) {
+		printf("А какое может быть путешествие фермера, если фермера не существует?\n");
+		return;
+	}
+	if (u->stamina == 0) {
+		printf("Какое тебе приключение? Иди спать, не позорься.");
+		return;
+	}
+	if (*current_hour == 2) {
+		printf("Ты время видел? Спать.");
+		return;
+	}
+
+	map m;
+	m.maap = NULL;
+	m.location = 1;
+
+	int needNewMap = 1;
+	int game = 1;
+	int distanse = 1;
+
+	while (1) {
+		if (needNewMap == 1) {
+			create(&m, u);
+			needNewMap = 0;
+		}
+
+		draw(&m, u, distanse, current_hour);
+
+		char way = _getch();
+		int nextH = u->userH;
+		int nextW = u->userW;
+
+		if (way == 'w' || way == 'W') {
+			nextH--;
+		}
+		if (way == 'a' || way == 'A') {
+			nextW--;
+		}
+		if (way == 's' || way == 'S') {
+			nextH++;
+		}
+		if (way == 'd' || way == 'D') {
+			nextW++;
+		}
+
+		if ((way == 'q' || way == 'Q') && m.maap[u->userH][u->userW] == fier) {
+			break;
+		}
+
+		if (m.maap[nextH][nextW] != wall && m.maap[nextH][nextW] != 'R' && m.maap[nextH][nextW] != 'T') {
+			u->userH = nextH;
+			u->userW = nextW;
+			u->stamina -= 1;
+		}
+
+		if (m.maap[u->userH][u->userW] == Exit) {
+			needNewMap = 1;
+			distanse++;
+			u->stamina -= 5;
+			*current_hour += 1;
+			if (m.location == 1) {
+				m.location = 0;
+			}
+			else {
+				m.location = 1;
+			}
+		}
+	}
+
+	free_(&m);
 }

@@ -9,74 +9,7 @@
 #include "User.h"
 #include "Utils.h"
 
-User* u = NULL;
 void load_item_names();
-
-void adventure(void) {
-	if (u == NULL) {
-		printf("А какое может быть путешествие фермера, если фермера не существует?\n");
-		return;
-	}
-	map m;
-	m.maap = NULL;
-	m.location = 1;
-
-	User u;
-	u.userH = 1;
-	u.userW = 1;
-
-	int needNewMap = 1;
-	int game = 1;
-	int distanse = 1;
-
-	while (1) {
-		if (needNewMap == 1) {
-			create(&m, &u);
-			needNewMap = 0;
-		}
-
-		draw(&m, &u, distanse);
-
-		char way = _getch();
-		int nextH = u.userH;
-		int nextW = u.userW;
-
-		if (way == 'w' || way == 'W') {
-			nextH--;
-		}
-		if (way == 'a' || way == 'A') {
-			nextW--;
-		}
-		if (way == 's' || way == 'S') {
-			nextH++;
-		}
-		if (way == 'd' || way == 'D') {
-			nextW++;
-		}
-
-		if ((way == 'q' || way == 'Q') && m.maap[u.userH][u.userW] == fier) {
-			break;
-		}
-
-		if (m.maap[nextH][nextW] != wall && m.maap[nextH][nextW] != 'R' && m.maap[nextH][nextW] != 'T') {
-			u.userH = nextH;
-			u.userW = nextW;
-		}
-
-		if (m.maap[u.userH][u.userW] == Exit) {
-			needNewMap = 1;
-			distanse++;
-			if (m.location == 1) {
-				m.location = 0;
-			}
-			else {
-				m.location = 1;
-			}
-		}
-	}
-
-	free_(&m);
-}
 		
 
 int main()
@@ -164,7 +97,7 @@ int main()
 			where_NPC(current_hour);
 			break;
 		case Trip:
-			adventure();
+			adventure(u, &current_day, &current_hour);
 			break;
 		default:
 			printf("Ты по-моему чё-то перепутал... \n");

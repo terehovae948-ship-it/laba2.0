@@ -14,6 +14,7 @@ typedef struct {
 	int location;
 }map;
 void create(map* m, User* u);
-void draw(const map* m, User* u, int distance);
+void draw(const map* m, User* u, int distance, int* current_hour);
 void free_(map* m);
+void adventure(User* u, int* current_day, int* current_hour);
 #endif
