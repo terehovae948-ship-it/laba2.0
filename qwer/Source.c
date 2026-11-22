@@ -9,10 +9,14 @@
 #include "User.h"
 #include "Utils.h"
 
-
+User* u = NULL;
 void load_item_names();
 
 void adventure(void) {
+	if (u == NULL) {
+		printf("А какое может быть путешествие фермера, если фермера не существует?\n");
+		return;
+	}
 	map m;
 	m.maap = NULL;
 	m.location = 1;
@@ -88,7 +92,7 @@ int main()
 	while (1)
 	{
 		printf("Привет, %s! Что же ты хочешь сделать?\n 0 - выход, 1 - создать перссонажа, 2 - карточка персонажа 3 - посмотреть на часы, "
-			"4 - поработать\n 5 - показать инвентарь, 6 - положить предмет в инвентарь 7 - выбросить предмет из инвентаря "
+			"4 - показать инвентарь\n 5 - поработать, 6 - положить предмет в инвентарь 7 - выбросить предмет из инвентаря "
 			"8 - уникальные находеи\n 9 - поиск по имени, 10 - записать в дневничок \n, 11 - Где НПС, 12 - отправится в приключение\n", u->name);
 		while (1) {
 			if (scanf("%d", &user_action) != 1) {
@@ -106,6 +110,9 @@ int main()
 			exit(0);
 		case User_create:
 			u = create_user(u);
+			break;
+		case User_card:
+			user_card(u, current_day, current_hour);
 			break;
 		case Watch_hour:
 			printf("Сейчас: %d день, %d часов \n", current_day, current_hour);

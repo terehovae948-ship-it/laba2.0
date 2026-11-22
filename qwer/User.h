@@ -18,5 +18,5 @@ void case_6(const User* u);
 void find_item(const User* u);
 User* create_user(User* curr_u);
 void free_u(User* u);
-void user_card(const User* u);
+void user_card(const User* u, int day, int hour);
 #endif

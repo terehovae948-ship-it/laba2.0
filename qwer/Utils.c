@@ -6,6 +6,7 @@
 int current_day = 1;
 int current_hour = 8;
 char item_names[10][15];
+
 void load_item_names(void) {
 	int count = 0;
 	int id;
@@ -56,6 +57,10 @@ void case_2(int* day_ptr, int* hour_ptr) {
 }
 
 void save_diary(const User* u) {
+	if (u == NULL) {
+		printf("А какой может быть дневник фермера, если фермера не существует?\n");
+		return;
+	}
 	FILE* diary = fopen("diary.txt", "a");
 	if (diary == NULL) {
 		printf("Ошибочка, ни создать, ни открыть файл не получилось");

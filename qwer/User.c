@@ -6,6 +6,10 @@
 #pragma warning(disable : 4996)
 
 void case_3(const User* u) {
+	if (u == NULL) {
+		printf("А какой может быть инвентарь фермера, если фермера не существует?\n");
+		return;
+	}
 	printf("Вот ваш инвентарь: \n");
 	for (int num = 0; num < 10; num++)
 	{
@@ -16,6 +20,10 @@ void case_3(const User* u) {
 }
 
 void case_4(User* u) {
+	if (u == NULL) {
+		printf("А какой может быть инвентарь фермера, если фермера не существует?\n");
+		return;
+	}
 	int num;
 	int item;
 	while (1) {
@@ -53,6 +61,10 @@ void case_4(User* u) {
 }
 
 void case_5(User* u) {
+	if (u == NULL) {
+		printf("А какой может быть инвентарь фермера, если фермера не существует?\n");
+		return;
+	}
 	int num;
 	while (1) {
 		printf("Из какого слота вы хотите выбросить предмет? \n");
@@ -74,6 +86,10 @@ void case_5(User* u) {
 }
 
 void case_6(const User* u) {
+	if (u == NULL) {
+		printf("А какой может быть инвентарь фермера, если фермера не существует?\n");
+		return;
+	}
 	for (int id = 1; id < 10; id++)
 	{
 		int count = 0;
@@ -91,6 +107,10 @@ void case_6(const User* u) {
 }
 
 void find_item(const User* u) {
+	if (u == NULL) {
+		printf("А какой может быть инвентарь фермера, если фермера не существует?\n");
+		return;
+	}
 	char search_item[15];
 	int id = -1;
 	printf("Введите название искомого предмета: ");
@@ -170,6 +190,20 @@ User* create_user(User* curr_u) {
 	return u;
 }
 
-void user_card(User* u) {
+void user_card(const User* u, int day, int hour) {
+	if (u == NULL) {
+		printf("А какая может быть карточка фермера, если фермера не существует?\n");
+		return;
+	}
 
+	printf("-----------------------------\n");
+	printf("Юнный фермер именуемый %s\n", u->name);
+	printf("Здоровье в своём лучшем состоянии: %d\n", u->max_hp);
+	printf("Здоровье в данный момент: %d\n", u->hp);
+	printf("Выносливость в своём лучшем состоянии: %d\n", u->max_stamina);
+	printf("Выносливость в данный момент: %d\n", u->stamina);
+	printf("Богатство: %d\n", u->gold);
+	printf("Сейчас %d день, %d час\n", day, hour);
+	case_3(u);
+	printf("-----------------------------\n");
 }
