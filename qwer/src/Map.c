@@ -130,7 +130,7 @@ void adventure(User* u, int* current_day, int* current_hour) {
 			found = 0;
 			found_relic = rand() % 3;
 			printf("Вау! Исследуя местность ты нашёл %s! Хочешь надеть (Уже надетая реликвия пропадёт) или предпочтёшь продать за 25 золота?\n", relic_name[found_relic]);
-			printf("%s", explain[found_relic]);
+			printf("%s\n", explain[found_relic]);
 			while (1) {
 				printf("K - оставить, S - продать.\n");
 				char coice = _getch();
