@@ -89,7 +89,7 @@ void draw(const map* m, User* u, int distance, int* current_hour) {
 		}
 		printf("\n");
 	}
-	printf("HP: %d | Stamina: %d | Gold: %d | Hour: %d", u->hp, u->stamina, u->gold, *current_hour);
+	printf("HP: %d | Stamina: %d | Gold: %d | Hour: %d\n", u->hp, u->stamina, u->gold, *current_hour);
 }
 
 void adventure(User* u, int* current_day, int* current_hour) {
@@ -97,7 +97,7 @@ void adventure(User* u, int* current_day, int* current_hour) {
 		printf("А какое может быть путешествие фермера, если фермера не существует?\n");
 		return;
 	}
-	if (u->stamina == 0) {
+	if (u->stamina <= 0) {
 		printf("Какое тебе приключение? Иди спать, не позорься.");
 		return;
 	}
@@ -113,14 +113,40 @@ void adventure(User* u, int* current_day, int* current_hour) {
 	int needNewMap = 1;
 	int game = 1;
 	int distanse = 1;
+	int lose = 0;
+	int found = 0;
+	int found_relic;
+	char relic_name[3][50] = { "Кольцо Жадности", "Сапоги-Скороходы", "Браслет Восстановления" };
+	char explain[3][60] = { "Золото Х2, но за шаг -2 стамины", "Смена этажа: -1 стамина", "При смене этажа +10 стамины" };
 
-	while (1) {
+	while (game == 1) {
 		if (needNewMap == 1) {
 			create(&m, u);
 			needNewMap = 0;
 		}
 
 		draw(&m, u, distanse, current_hour);
+		if (found == 1) {
+			found = 0;
+			found_relic = rand() % 3;
+			printf("Вау! Исследуя местность ты нашёл %s! Хочешь надеть (Уже надетая реликвия пропадёт) или предпочтёшь продать за 25 золота?\n", relic_name[found_relic]);
+			printf("%s", explain[found_relic]);
+			while (1) {
+				printf("K - оставить, S - продать.\n");
+				char coice = _getch();
+				if (coice == 'K' || coice == 'k') {
+					u->relic = found_relic;
+					break;
+				}
+				else if (coice == 'S' || coice == 's') {
+					u->gold += 25;
+					break;
+				}
+				else {
+					printf("Не поняла твоего ответа. S или K\n");
+				}
+			}
+		}
 
 		char way = _getch();
 		int nextH = u->userH;
@@ -140,28 +166,69 @@ void adventure(User* u, int* current_day, int* current_hour) {
 		}
 
 		if ((way == 'q' || way == 'Q') && m.maap[u->userH][u->userW] == fier) {
-			break;
+			game = 0;
 		}
 
 		if (m.maap[nextH][nextW] != wall && m.maap[nextH][nextW] != 'R' && m.maap[nextH][nextW] != 'T') {
 			u->userH = nextH;
 			u->userW = nextW;
-			u->stamina -= 1;
+			if (u->relic == Ring_of_stingy) {
+				u->stamina -= 2;
+			}
+			else {
+				u->stamina -= 1;
+			}
+			if (u->stamina <= 0) {
+				game = 0;
+				lose = 1;
+				u->gold = u->gold / 2;
+				continue;
+			}
 		}
 
 		if (m.maap[u->userH][u->userW] == Exit) {
-			needNewMap = 1;
-			distanse++;
-			u->stamina -= 5;
+			if (u->relic == Fast_boots) {
+				u->stamina -= 1;
+			}
+			else if (u->relic == Recover_Armlet) {
+				u->stamina += 10;
+			}
+			else {
+				u->stamina -= 5;
+			}
 			*current_hour += 1;
+			if (*current_hour >= 24) {
+				*current_day += *current_hour / 24;
+				*current_hour = *current_hour % 24;
+			}
+			if (u->stamina <= 0 || *current_hour == 2) {
+				game = 0;
+				lose = 1;
+				u->gold = u->gold / 2;
+				continue;
+			}
 			if (m.location == 1) {
 				m.location = 0;
 			}
 			else {
 				m.location = 1;
 			}
+			if (u->relic == Ring_of_stingy) {
+				u->gold += coefficient_gold * distanse * 2;
+			}
+			else {
+				u->gold += coefficient_gold * distanse;
+			}
+			distanse++;
+			needNewMap = 1;
+			if (rand() % 100 < 20) {
+				found = 1;
+			}
 		}
 	}
 
 	free_(&m);
+	if (lose == 1) {
+		printf("О нет, ты свалился в обморок от бессилия! Благо, добрые люди дотащили тебя домой, но половину твоего золота, увы, нет\n");
+	}
 }

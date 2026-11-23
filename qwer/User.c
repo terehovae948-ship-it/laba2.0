@@ -186,6 +186,7 @@ User* create_user(User* curr_u) {
 	u->gold = 50;
 	u->userH = 1;
 	u->userW = 1;
+	u->relic = No_relic;
 
 	return u;
 }

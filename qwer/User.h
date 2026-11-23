@@ -9,7 +9,15 @@ typedef struct {
     int gold;
     int userH, userW;
     int inventory[10];
+    int relic;
 } User;
+
+enum Relic {
+    No_relic = -1,
+    Ring_of_stingy,
+    Fast_boots,
+    Recover_Armlet,
+};
 
 void case_3(const User* u);
 void case_4(User* u);

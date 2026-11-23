@@ -5,6 +5,7 @@
 #define empty '.'
 #define Exit '0'
 #define fier 'K'
+#define coefficient_gold 5
 
 #include "User.h"
 
